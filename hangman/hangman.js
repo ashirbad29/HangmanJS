@@ -69,6 +69,20 @@ const get_available_letters = letters_guessed => {
 	return str;
 };
 
+/**
+ * @param {String} secreat_word
+ * @param {Array} letters_guessed
+ */
+
+const handle_hint = (secreat_word, letters_guessed) => {
+	for (let char of secreat_word) {
+		if (letters_guessed.includes(char) == false) {
+			console.log(`Your Hint: ${char}`);
+			break;
+		}
+	}
+};
+
 const hangman = secreat_word => {
 	/*
   secret_word (string) : secret word to guessed by the user.
@@ -91,13 +105,25 @@ const hangman = secreat_word => {
 	);
 
 	const letters_guessed = [];
+	let hasHintLeft = true;
 	let index = 0;
-	while (index < images.length) {
+	while (index < images.length - 1) {
 		const available_letters = get_available_letters(letters_guessed);
 		console.log(`Availalbe letters: ${available_letters}`);
-
+		if (hasHintLeft) console.log('Type "hint" for a hint 😸 \n');
 		const guess = read_line_sync.question('Please guess a letter: ');
 		const letter = guess.toLowerCase();
+
+		if (letter == 'hint') {
+			if (hasHintLeft) {
+				hasHintLeft = false;
+				handle_hint(secreat_word, letters_guessed);
+				continue;
+			} else {
+				console.log('You don not have any hints left 😢');
+				continue;
+			}
+		}
 
 		if (letter.length > 1) {
 			console.log('Enter Only a Single Character from available words');
@@ -107,7 +133,7 @@ const hangman = secreat_word => {
 		if (secreat_word.includes(letter)) {
 			letters_guessed.push(letter);
 			console.log(
-				`Good guess: ${get_guessed_word(secreat_word, letters_guessed)}`
+				`Good guess: ${get_guessed_word(secreat_word, letters_guessed)} \n`
 			);
 
 			if (is_word_guessed(secreat_word, letters_guessed)) {
@@ -124,7 +150,7 @@ const hangman = secreat_word => {
 
 			console.log(images[index++]);
 
-			if (index == images.length) {
+			if (index == images.length - 1) {
 				console.log("You Couldn't guessed it, Better try next time...");
 				console.log(`The Correct Word is ${secreat_word} 😄`);
 			}
