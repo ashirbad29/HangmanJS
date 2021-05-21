@@ -1,4 +1,5 @@
 import read_line_sync from 'readline-sync';
+import chalk from 'chalk';
 import choose_word from './words.js';
 import images from './images.js';
 
@@ -77,7 +78,7 @@ const get_available_letters = letters_guessed => {
 const handle_hint = (secreat_word, letters_guessed) => {
 	for (let char of secreat_word) {
 		if (letters_guessed.includes(char) == false) {
-			console.log(`Your Hint: ${char}`);
+			console.log(chalk.greenBright(`Your Hint: ${char}`));
 			break;
 		}
 	}
@@ -99,9 +100,13 @@ const hangman = secreat_word => {
     * Display partial word guessed by the user and use underscore in place of not guess word    
   */
 
-	console.log('Welcome to the game, Hangman!');
+	console.log(chalk.yellowBright('\t * Welcome to the game, Hangman! *'));
 	console.log(
-		`I am thinking of a word that is of length ${secreat_word.length} \n`
+		chalk.cyan(
+			`I am thinking of a word that is of length ${chalk.bold(
+				secreat_word.length
+			)} \n`
+		)
 	);
 
 	const letters_guessed = [];
@@ -109,8 +114,9 @@ const hangman = secreat_word => {
 	let index = 0;
 	while (index < images.length - 1) {
 		const available_letters = get_available_letters(letters_guessed);
-		console.log(`Availalbe letters: ${available_letters}`);
-		if (hasHintLeft) console.log('Type "hint" for a hint 😸 \n');
+		console.log(`Availalbe letters: ${chalk.green(available_letters)}`);
+		if (hasHintLeft)
+			console.log(`Type ${chalk.blue('"hint"')} for a hint 😸 \n`);
 		const guess = read_line_sync.question('Please guess a letter: ');
 		const letter = guess.toLowerCase();
 
@@ -133,26 +139,34 @@ const hangman = secreat_word => {
 		if (secreat_word.includes(letter)) {
 			letters_guessed.push(letter);
 			console.log(
-				`Good guess: ${get_guessed_word(secreat_word, letters_guessed)} \n`
+				chalk.greenBright(
+					`Good guess: ${get_guessed_word(secreat_word, letters_guessed)} \n`
+				)
 			);
 
 			if (is_word_guessed(secreat_word, letters_guessed)) {
-				console.log('* * Congratulations, you won! * *');
+				console.log(chalk.greenBright('* * Congratulations, you won🎉 * *'));
 				break;
 			}
 		} else {
 			console.log(
-				`Oops! That letter is not in my word: ${get_guessed_word(
-					secreat_word,
-					letters_guessed
-				)}`
+				chalk.red(
+					`Oops! That letter is not in my word: ${get_guessed_word(
+						secreat_word,
+						letters_guessed
+					)}`
+				)
 			);
 
-			console.log(images[index++]);
+			console.log(chalk.redBright(images[index++]));
 
 			if (index == images.length - 1) {
-				console.log("You Couldn't guessed it, Better try next time...");
-				console.log(`The Correct Word is ${secreat_word} 😄`);
+				console.log(
+					chalk.yellowBright("You Couldn't guessed it, Better try next time...")
+				);
+				console.log(
+					chalk.yellowBright(`The Correct Word is ${secreat_word} 😄`)
+				);
 			}
 
 			letters_guessed.push(letter);
