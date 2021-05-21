@@ -21,10 +21,13 @@ const is_word_guessed = (secreat_word, letters_guessed) => {
 };
 
 // if you want to test this function please call function -> get_guessed_word("kindness", [k, n, d])
-
+/**
+ * @param {String} secreat_word
+ * @param {Array} letters_guessed
+ */
 const get_guessed_word = (secret_word, letters_guessed) => {
 	/*
-    secret_word: word guess by the user
+    secret_word: word to guess by the user
     letters_guessed: list hold all the word guess by the user
     returns: 
       return string which contain all the right guessed characters
@@ -32,18 +35,33 @@ const get_guessed_word = (secret_word, letters_guessed) => {
       if secret_word -> "kindness" and letters_guessed = [k, n, s]
       return "k_n_n_ss"
   */
+	let str = '';
+	for (let char of secreat_word) {
+		letters_guessed.includes(char) ? (str += char) : (str += '_');
+	}
 
-	let index = 0;
+	return str;
 };
 
+/**
+ * @param {Array} letters_guessed
+ */
 const get_available_letters = letters_guessed => {
 	/*
    returns:
-    it return string whcih contains all charactersexcept guessed
+    it return string whcih contains all characters except guessed
   Example :-
       letters_guessed = ['e', 'a'] then    
       return sting is -> `bcdfghijklmnopqrstuvwxyz`
   */
+	let str = '';
+	for (let i = 0; i <= 25; i++) {
+		let chr = String.fromCharCode(97 + i);
+		if (letters_guessed.includes(chr)) continue;
+		str += chr;
+	}
+
+	return str;
 };
 
 const hangman = secreat_word => {
@@ -94,4 +112,8 @@ const hangman = secreat_word => {
 };
 
 const secreat_word = choose_word();
-hangman(secreat_word);
+// hangman(secreat_word);
+
+// * testing stuff
+// console.log(get_guessed_word('kindness', ['k', 'n', 's'])); // working
+// console.log(get_available_letters(['a', 'b', 'z'])); // working
